@@ -1,0 +1,25 @@
+---
+title: "Food Security Dashboard"
+format: 
+  html:
+    theme: cosmo
+    toc: true
+---
+
+## Introduction
+
+This dashboard presents food security data.
+
+```{r}
+```{r}
+# Sample R code to visualize food insecurity data
+library(ggplot2)
+data <- data.frame(
+  Category = c("Food Secure", "Moderate Insecurity", "Another Category", "Very Insecure"),
+  Value = c(50, 20, 15, 15)
+)
+ggplot(data, aes(x = Category, y = Value, fill = Category)) +
+  geom_bar(stat = "identity") +
+  theme_minimal()
+```
+

@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Food Security Dashboard",
+    "section": "",
+    "text": "This dashboard presents food security data.\n\n# Sample R code to visualize food insecurity data\nlibrary(ggplot2)\ndata &lt;- data.frame(\n  Category = c(\"Food Secure\", \"Moderate Insecurity\", \"Another Category\", \"Very Insecure\"),\n  Value = c(50, 20, 15, 15)\n)\nggplot(data, aes(x = Category, y = Value, fill = Category)) +\n  geom_bar(stat = \"identity\") +\n  theme_minimal()"
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "Food Security Dashboard",
+    "section": "",
+    "text": "This dashboard presents food security data.\n\n# Sample R code to visualize food insecurity data\nlibrary(ggplot2)\ndata &lt;- data.frame(\n  Category = c(\"Food Secure\", \"Moderate Insecurity\", \"Another Category\", \"Very Insecure\"),\n  Value = c(50, 20, 15, 15)\n)\nggplot(data, aes(x = Category, y = Value, fill = Category)) +\n  geom_bar(stat = \"identity\") +\n  theme_minimal()"
+  }
+]

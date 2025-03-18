@@ -1,0 +1,16 @@
+project:
+  type: website
+
+website:
+  title: "Food Security Dashboard"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+  page-footer: "University of Sheffield"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
