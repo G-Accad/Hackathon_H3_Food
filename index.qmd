@@ -1,5 +1,5 @@
 ---
-title: "Food Security Dashboard"
+title: "Homepage"
 format: 
   html:
     theme: cosmo
@@ -10,7 +10,7 @@ format:
 
 This dashboard presents food security data.
 
-```{r}
+
 ```{r}
 # Sample R code to visualize food insecurity data
 library(ggplot2)

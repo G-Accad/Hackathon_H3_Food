@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="grace">
+<meta name="dcterms.date" content="2025-03-13">
+
+<title>EDA – Food Security Dashboard</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ddd961a2510921635943dfbbd19534c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Food Security Dashboard</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./page1.html" aria-current="page"> 
+<span class="menu-text">Sheffield</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">EDA</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>grace </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 13, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(survey_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "transaction_id"                                            
+  [2] "Q57_age"                                                   
+  [3] "Q58_gender1"                                               
+  [4] "Q59_Where_do_you_live"                                     
+  [5] "Q59_7_TEXT"                                                
+  [6] "Q5_Which_of_the_following_best_describes_the_area_you_live"
+  [7] "Q5_7_TEXT"                                                 
+  [8] "Q6_work_status"                                            
+  [9] "Q6_11_TEXT"                                                
+ [10] "Q7_Highest_academic_qualification"                         
+ [11] "Q7_10_TEXT"                                                
+ [12] "Q8UK_Ethnic_Origin"                                        
+ [13] "Ethgrp_White1"                                             
+ [14] "Ethgrp_Black1"                                             
+ [15] "Ethgrp_Asian1"                                             
+ [16] "Ethgrp_Mixed1"                                             
+ [17] "Ethgrp_Other1"                                             
+ [18] "Ethgrp_Prefernottosay1"                                    
+ [19] "Household_Income"                                          
+ [20] "Q10_Household"                                             
+ [21] "Household_alone1"                                          
+ [22] "Household_partner1"                                        
+ [23] "Household_Children_aged0_4"                                
+ [24] "Household_Children_aged5_11"                               
+ [25] "Household_Children_aged12_18"                              
+ [26] "Household_Adult_children_aged18"                           
+ [27] "Household_Parents_or_elderly_relative"                     
+ [28] "Household_Other1"                                          
+ [29] "Household_prefer_not_to_say"                               
+ [30] "Q10_3_TEXTHousehold_Childrenaged0_4_number"                
+ [31] "Q10_4_TEXTHousehold_Childrenaged5_11_number"               
+ [32] "Q10_5_TEXT_Childrenaged12_18_number"                       
+ [33] "Q10_6_TEXTAdultchildren_aged18_number"                     
+ [34] "Q10_7_TEXTParent_s_orelderlyrelative_number"               
+ [35] "Q10_8_TEXT_Other"                                          
+ [36] "Q56_feelingoptimisticaboutthefuture1"                      
+ [37] "Q56_feelinguseful1"                                        
+ [38] "Q56_feelingrelaxed1"                                       
+ [39] "Q56_dealingwithproblemswell1"                              
+ [40] "Q56_thinkingclearly1"                                      
+ [41] "Q56_feelingclosetootherpeople1"                            
+ [42] "Q56_abletomakeupmyownmindaboutthings1"                     
+ [43] "SC0_A"                                                     
+ [44] "SC0Adjusted"                                               
+ [45] "SC0Ment_RCal_Wellbeing"                                    
+ [46] "age"                                                       
+ [47] "KcalSum"                                                   
+ [48] "FoodsecurityScore"                                         
+ [49] "SpecialDietAggregated"                                     
+ [50] "SpecialDiet_Toloseweight"                                  
+ [51] "SpecialDiet_Togainweight"                                  
+ [52] "SpecialDiet_Formedicalreasons"                             
+ [53] "SpecialDiet_Glutenfree"                                    
+ [54] "SpecialDiet_Wheatfree"                                     
+ [55] "SpecialDiet_Dairyfree"                                     
+ [56] "SpecialDiet_Vegetarian"                                    
+ [57] "SpecialDiet_Vegan"                                         
+ [58] "SpecialDiet_Notonaspecialdiet"                             
+ [59] "SpecialDiet_Other"                                         
+ [60] "CuisineandFood"                                            
+ [61] "CuisineandFood_TraditionalBritish"                         
+ [62] "CuisineandFood_ModernBritish"                              
+ [63] "CuisineandFood_Pub"                                        
+ [64] "CuisineandFood_Italian"                                    
+ [65] "CuisineandFood_Indian"                                     
+ [66] "CuisineandFood_Chinese"                                    
+ [67] "CuisineandFood_American"                                   
+ [68] "CuisineandFood_Thai"                                       
+ [69] "CuisineandFood_Japanese"                                   
+ [70] "CuisineandFood_Korean"                                     
+ [71] "CuisineandFood_French"                                     
+ [72] "CuisineandFood_Greek"                                      
+ [73] "CuisineandFood_Spanish"                                    
+ [74] "CuisineandFood_African"                                    
+ [75] "CuisineandFood_Caribbean"                                  
+ [76] "CuisineandFood_EasternEuropean"                            
+ [77] "CuisineandFood_MiddleEastern"                              
+ [78] "CuisineandFood_Mexican"                                    
+ [79] "CuisineandFood_Vegetarian"                                 
+ [80] "CuisineandFood_Vegan"                                      
+ [81] "CuisineandFood_Iprefernottosay"                            
+ [82] "CuisineandFood_Other"                                      
+ [83] "EatingOutofHome7DayRecall"                                 
+ [84] "LabourShopping1"                                           
+ [85] "LabourCooking1"                                            
+ [86] "CookingSkill1"                                             
+ [87] "AskaboutFoodSourceMonthlyAggregated"                       
+ [88] "AskaboutFoodSourceMonthly01Independent"                    
+ [89] "AskaboutFoodSourceMonthly02Localmarket"                    
+ [90] "AskaboutFoodSourceMonthly03Vegetablebox"                   
+ [91] "AskaboutFoodSourceMonthly04Petrolstation"                  
+ [92] "AskaboutFoodSourceMonthly05Cornerconvenience"              
+ [93] "AskaboutFoodSourceMonthly06Smallsupermarketchain"          
+ [94] "AskaboutFoodSourceMonthly07Largeupermarketchain"           
+ [95] "AskaboutFoodSourceMonthly08Budgetsupermarketchain"         
+ [96] "AskaboutFoodSourceMonthly09Foodbank"                       
+ [97] "AskaboutFoodSourceMonthly10Foodsharingapp"                 
+ [98] "AskaboutFoodSourceMonthly11Fooddeliveryapp"                
+ [99] "AskaboutFoodSourceMonthly12Recipebox"                      
+[100] "AskaboutFoodSourceMonthly13Onlineonly"                     
+[101] "AskaboutFoodSourceMonthly14Iprefernottosay"                
+[102] "TransportAggregated"                                       
+[103] "Transport01_car"                                           
+[104] "Transport02_bike"                                          
+[105] "Transport03_PublicTrans_bus"                               
+[106] "Transport04_Public_train_tube"                             
+[107] "Transport05_Walking"                                       
+[108] "Transport06_prefernottosay"                                
+[109] "Transport07_other"                                         </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">as.factor</span>(survey_data<span class="sc">$</span>Q6_work_status))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   2    3    4    5    6    7    8    9   10   11   12   13 NA's 
+ 115   67    6   21   14  275   96   72  107   32 1202  393    7 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">as.factor</span>(intake_data<span class="sc">$</span>Specialdiet))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                                                             Not on a special diet 
+                                                                                             18737 
+                                                                                    To lose weight 
+                                                                                              3690 
+                                                                                    To gain weight 
+                                                                                              1382 
+                                                                                        Vegetarian 
+                                                                                              1069 
+                                                                               For medical reasons 
+                                                                                               948 
+                                                                                       Gluten free 
+                                                                                               674 
+                                                                                        Dairy free 
+                                                                                               358 
+                                                                                        Wheat free 
+                                                                                               234 
+                                                                                             Vegan 
+                                                                                               212 
+                                                               To lose weight, For medical reasons 
+                                                                                               127 
+                                                                    To lose weight, To gain weight 
+                                                                                                83 
+                                                                           Gluten free, Wheat free 
+                                                                                                80 
+                                                                           Gluten free, Dairy free 
+                                                                                                68 
+                                                                       To lose weight, Gluten free 
+                                                                                                66 
+                                                               To gain weight, For medical reasons 
+                                                                                                61 
+                                                                                 Vegetarian, Vegan 
+                                                                                                59 
+                                                                        To lose weight, Vegetarian 
+                                                                                                58 
+                                                                   Vegetarian, For medical reasons 
+                                                                                                55 
+                                                               For medical reasons, To lose weight 
+                                                                                                52 
+                                                                        Vegetarian, To gain weight 
+                                                                                                51 
+                                                                       To gain weight, Gluten free 
+                                                                                                39 
+                                                                                Other: pescatarian 
+                                                                                                38 
+                                                                        To lose weight, Wheat free 
+                                                                                                37 
+                                                                        To lose weight, Dairy free 
+                                                                                                36 
+                                                                                Gluten free, Vegan 
+                                                                                                35 
+                                                            To gain weight, Dairy free, Vegetarian 
+                                                                                                30 
+                                                             To lose weight, Not on a special diet 
+                                                                                                29 
+                                                               For medical reasons, To gain weight 
+                                                                                                28 
+                                                                  Gluten free, For medical reasons 
+                                                                                                27 
+                                               To lose weight, To gain weight, For medical reasons 
+                                                                                                27 
+                                                                                   Other: diabetic 
+                                                                                                26 
+                                                                                      Other: HALAL 
+                                                                                                26 
+                                                                        Vegetarian, To lose weight 
+                                                                                                26 
+                                                                           Gluten free, Vegetarian 
+                                                                                                25 
+                                                                                Other: Pescatarian 
+                                                                                                25 
+                                                                           Dairy free, Gluten free 
+                                                                                                24 
+                                                               Gluten free, Dairy free, Wheat free 
+                                                                                                24 
+                                                               Gluten free, Wheat free, Vegetarian 
+                                                                                                24 
+                                                           To lose weight, Gluten free, Wheat free 
+                                                                                                24 
+                                          Gluten free, For medical reasons, Dairy free, Vegetarian 
+                                                                                                22 
+                                          Gluten free, For medical reasons, Wheat free, Dairy free 
+                                                                                                22 
+                                                            Vegetarian, Wheat free, To gain weight 
+                                                                                                22 
+                                                   Not on a special diet, Other: Dr recommended it 
+                                                                                                20 
+                                                                                 Other: MEAT EATER 
+                                                                                                19 
+               Other: recovering from pneumonia so eating very healthily &amp; taking more supplements 
+                                                                                                19 
+                                                                            Other: sugar free diet 
+                                                                                                19 
+                                                                    To gain weight, To lose weight 
+                                                                                                19 
+                                                                        To gain weight, Vegetarian 
+                                                                                                19 
+                                                                                  Other: Low sugar 
+                                                                                                18 
+                                                             To gain weight, Not on a special diet 
+                                                                                                18 
+                                                                                   Other: Diabetic 
+                                                                                                17 
+Other: Have Osteoarthritis in my knee joints so try to stick to foods that don’t trigger the pain. 
+                                                                                                17 
+                                                                                  Other: Less meat 
+                                                                                                17 
+                                              Other: Low carbohydrate to regulated diabetes type 2 
+                                                                                                17 
+                                                                    Other: No ultra processed food 
+                                                                                                17 
+                                             To lose weight, Not on a special diet, Other: Fasting 
+                                                                                                17 
+                                                        To lose weight, To gain weight, Dairy free 
+                                                                                                17 
+                                                                             To lose weight, Vegan 
+                                                                                                17 
+                                                                            Vegetarian, Dairy free 
+                                                                                                17 
+                                      Vegetarian, Gluten free, For medical reasons, To lose weight 
+                                                                                                17 
+                                           Gluten free, Dairy free, Vegetarian, Other: Pescatarian 
+                                                                                                16 
+                                                                        To gain weight, Wheat free 
+                                                                                                16 
+                                                   To lose weight, For medical reasons, Dairy free 
+                                                                                                16 
+                                                      Vegetarian, Gluten free, For medical reasons 
+                                                                                                16 
+                                                                   Wheat free, For medical reasons 
+                                                                                                16 
+                                                   For medical reasons, To lose weight, Vegetarian 
+                                                                                                15 
+                                                   For medical reasons, Vegetarian, To lose weight 
+                                                                                                15 
+                                           Not on a special diet, Other: budgetting very carefully 
+                                                                                                15 
+                                                            To lose weight, Dairy free, Vegetarian 
+                                                                                                15 
+                                                           To lose weight, Gluten free, Vegetarian 
+                                                                                                15 
+                                                                                 Dairy free, Vegan 
+                                                                                                14 
+                                                                  For medical reasons, Gluten free 
+                                                                                                14 
+                                              For medical reasons, Other: Reduced sugar (diabetic) 
+                                                                                                14 
+                                                                Gluten free, Not on a special diet 
+                                                                                                14 
+                                                                Wheat free, Dairy free, Vegetarian 
+                                                                                                14 
+                                                                                        Other: N/A 
+                                                                                                13 
+                                                                                    Other: No eggs 
+                                                                                                13 
+                                         Other: Trying various diets because of digestive problems 
+                                                                                                13 
+                                              To lose weight, For medical reasons, Other: low carb 
+                                                                                                13 
+                                                                    To lose weight, Other: Fasting 
+                                                                                                13 
+                                                       To lose weight, To gain weight, Gluten free 
+                                                                                                13 
+                                                                        Dairy free, To gain weight 
+                                                                                                12 
+                                                                   For medical reasons, Dairy free 
+                                                                                                12 
+                                                      For medical reasons, Gluten free, Wheat free 
+                                                                                                12 
+                                                                   For medical reasons, Wheat free 
+                                                                                                12 
+                                                           Gluten free, Dairy free, To lose weight 
+                                                                                                12 
+                                                          Not on a special diet, Vegan, Vegetarian 
+                                                                                                12 
+                                                                                  Other: carnivore 
+                                                                                                12 
+                                                                             Other: carnivore diet 
+                                                                                                12 
+                                                                           Other: Low carbohydrate 
+                                                                                                12 
+                                          Other: yes I do follow diets to keep fits and be healthy 
+                                                                                                12 
+                                                            To gain weight, Wheat free, Dairy free 
+                                                                                                12 
+                                                  To lose weight, For medical reasons, Gluten free 
+                                                                                                12 
+                                           To lose weight, To gain weight, Gluten free, Wheat free 
+                                                                                                12 
+                                                   To lose weight, Vegetarian, For medical reasons 
+                                                                                                12 
+                                                           Dairy free, Gluten free, To lose weight 
+                                                                                                11 
+                               To lose weight, To gain weight, Dairy free, Gluten free, Wheat free 
+                                                                                                11 
+                     For medical reasons, Other: Low residue/fibre diet due to permanent ileostomy 
+                                                                                                10 
+                                                               Wheat free, Gluten free, Vegetarian 
+                                                                                                10 
+                                                                                           (Other) 
+                                                                                               138 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(intake_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "transaction_id"                                                  
+  [2] "Q57_age"                                                         
+  [3] "Gender_1"                                                        
+  [4] "Q59_Where_do_you_live_1"                                         
+  [5] "Q59_7_TEXT"                                                      
+  [6] "Q5_Which_of_the_following_best_describes_the_area_you_live_in"   
+  [7] "Q5_7_TEXT"                                                       
+  [8] "Q6_work_status_1"                                                
+  [9] "Q6_11_TEXT"                                                      
+ [10] "Q7_Highest_academic_qualification_that_you_have_achieved"        
+ [11] "Q7_10_TEXT"                                                      
+ [12] "Q8UK_Ethnic_Origin"                                              
+ [13] "Ethgrp_White1"                                                   
+ [14] "Ethgrp_Black1"                                                   
+ [15] "Ethgrp_Asian1"                                                   
+ [16] "Ethgrp_Mixed1"                                                   
+ [17] "Ethgrp_Other1"                                                   
+ [18] "Ethgrp_Prefernottosay1"                                          
+ [19] "Household_income_1"                                              
+ [20] "Specialdiet"                                                     
+ [21] "Specialdiet_Toloseweight1"                                       
+ [22] "Specialdiet_Togainweight1"                                       
+ [23] "Specialdiet_Formedicalreasonse.g.tolowercholesterol1"            
+ [24] "Specialdiet_Glutenfree1"                                         
+ [25] "Specialdiet_Wheatfree1"                                          
+ [26] "Specialdiet_Dairyfree1"                                          
+ [27] "Specialdiet_Vegetarian1"                                         
+ [28] "Specialdiet_Vegan1"                                              
+ [29] "Specialdiet_Notonaspecialdiet1"                                  
+ [30] "Specialdiet_Otheradddetail1"                                     
+ [31] "EatingOutofHome7DayRecall"                                       
+ [32] "CuisineandFood"                                                  
+ [33] "CuisineTypesinLastWeek_TraditionalBritish1"                      
+ [34] "CuisineTypesinLastWeeko_ModernBritish1"                          
+ [35] "CuisineTypesinLastWeek_Pub1"                                     
+ [36] "CuisineTypesinLastWeek_Italian1"                                 
+ [37] "CuisineTypesinLastWeek_Indian1"                                  
+ [38] "CuisineTypesinLastWeek_Chinese1"                                 
+ [39] "CuisineTypesinLastWeek_American1"                                
+ [40] "CuisineTypesinLastWeek_Thai1"                                    
+ [41] "CuisineTypesinLastWeek_Japanese1"                                
+ [42] "CuisineTypesinLastWeek_Korean1"                                  
+ [43] "CuisineTypesinLastWeek_French1"                                  
+ [44] "CuisineTypesinLastWeek_Greek1"                                   
+ [45] "CuisineTypesinLastWeek_Spanish1"                                 
+ [46] "CuisineTypesinLastWeek_African1"                                 
+ [47] "CuisineTypesinLastWeek_Caribbean1"                               
+ [48] "CuisineTypesinLastWeeko_EasternEuropean1"                        
+ [49] "CuisineTypesinLastWeeko_MiddleEastern1"                          
+ [50] "CuisineTypesinLastWeeko_Mexican1"                                
+ [51] "CuisineTypesinLastWeeko_Vegetarian1"                             
+ [52] "CuisineTypesinLastWeek_Vegan1"                                   
+ [53] "CuisineTypesinLastWeeko_lprefernottosay1"                        
+ [54] "CuisineTypesinLastWeek_Other1"                                   
+ [55] "LabourShopping1"                                                 
+ [56] "LabourCooking1"                                                  
+ [57] "CookingSkill1"                                                   
+ [58] "AskaboutFoodSourceMonthlyAggregated"                             
+ [59] "AskaboutFoodSourceMonthly01Independent"                          
+ [60] "AskaboutFoodSourceMonthly02Localmarket"                          
+ [61] "AskaboutFoodSourceMonthly03Vegetablebox"                         
+ [62] "AskaboutFoodSourceMonthly04Petrolstation"                        
+ [63] "AskaboutFoodSourceMonthly05Cornerconvenience"                    
+ [64] "AskaboutFoodSourceMonthly06Smallsupermarketchain"                
+ [65] "AskaboutFoodSourceMonthly07Largeupermarketchain"                 
+ [66] "AskaboutFoodSourceMonthly08Budgetsupermarketchain"               
+ [67] "AskaboutFoodSourceMonthly09Foodbank"                             
+ [68] "AskaboutFoodSourceMonthly10Foodsharingapp"                       
+ [69] "AskaboutFoodSourceMonthly11Fooddeliveryapp"                      
+ [70] "AskaboutFoodSourceMonthly12Recipebox"                            
+ [71] "AskaboutFoodSourceMonthly13Onlineonly"                           
+ [72] "AskaboutFoodSourceMonthly14Iprefernottosay"                      
+ [73] "TransportAggregated"                                             
+ [74] "Transport01_car"                                                 
+ [75] "Transport02_bike"                                                
+ [76] "Transport03_PublicTrans_bus"                                     
+ [77] "Transport04_Public_train_tube"                                   
+ [78] "Transport05_Walking"                                             
+ [79] "Transport06_prefernottosay"                                      
+ [80] "Transport07_other"                                               
+ [81] "FoodInsecurity1"                                                 
+ [82] "FoodSecurity1"                                                   
+ [83] "FoodInsecurity2"                                                 
+ [84] "FoundmyselfunabletobuyfoodduetolackofmoneyFood_Sec2"             
+ [85] "BeenunabletoaffordtoeathealthybalancedmealsFood_Sec2"            
+ [86] "CutmealsizeFood_Sec2"                                            
+ [87] "SkippedmealsFood_Sec2"                                           
+ [88] "BeenhungryFood_Sec2"                                             
+ [89] "ObtainedfoodfromafoodbankFood_Sec2"                              
+ [90] "ReducedthequantityFood_Sec2"                                     
+ [91] "Hadtobuycheaperfoodthatcompromiseson...Food_Sec2"                
+ [92] "SwappedbrandedproductsforcheaperFood_Sec2"                       
+ [93] "CookedfromscratchFood_Sec2"                                      
+ [94] "locallyproducedfoodsFood_Sec2"                                   
+ [95] "BulkedoutmealsFood_Sec2"                                         
+ [96] "AnotherFood_Sec2"                                                
+ [97] "NoneoftheseFood_Sec2"                                            
+ [98] "FoodSecurity2SumHARD"                                            
+ [99] "FoodSecurity2SumSOFT"                                            
+[100] "Combination1FoodSecurity"                                        
+[101] "MealIndex"                                                       
+[102] "MealID"                                                          
+[103] "Meal_name"                                                       
+[104] "Mealtime"                                                        
+[105] "Mealfoodsource"                                                  
+[106] "Mealfoodsource_Burger_chip_or_kebab_van_streetfood"              
+[107] "Mealfoodsource_Supermarket_localshop_petrolstation_householdshop"
+[108] "Mealfoodsource_Supermarket_localshoppetrolstation_food_on_the_go"
+[109] "Mealfoodsource_Canteen_at_work_or_school_university_college"     
+[110] "Mealfoodsource_Fastfood_takeaway_outlet"                         
+[111] "Mealfoodsource_Foodbank_charity_communityorgov_tfood_delivery"   
+[112] "Mealfoodsource_Foodsharing_app_e.g.OlioTooGoodtoGo"              
+[113] "Mealfoodsource_Leisurecentre_recreation_or_entertainmentvenue"   
+[114] "Mealfoodsource_Don.t_know"                                       
+[115] "Mealfoodsource_I_prefer_not_to_say"                              
+[116] "Mealfoodsource_online_only_provider_or_marketplace"              
+[117] "Mealfoodsource_Restaurant_or_pub"                                
+[118] "Mealfoodsource_Recipebox_delivered_to_you"                       
+[119] "Mealfoodsource_Vegetable_box_or_farm_deliveries"                 
+[120] "Mealfoodsource_Vending_machine_in_any_location"                  
+[121] "Mealfoodsource_Other"                                            
+[122] "Whowasthismealeatenwith"                                         
+[123] "Meal_eaten_withAlone"                                            
+[124] "Meal_eaten_withCarer"                                            
+[125] "Meal_eaten_withChildren"                                         
+[126] "Meal_eaten_withFlatmates"                                        
+[127] "Meal_eaten_withFriends"                                          
+[128] "Meal_eaten_withParents"                                          
+[129] "Meal_eaten_withPartners"                                         
+[130] "Meal_eaten_withWorkcolleagues"                                   
+[131] "Meal_eaten_withWiderFamily"                                      
+[132] "Meal_eaten_withSiblings"                                         
+[133] "Meal_eaten_withOthersGeneralPublic"                              
+[134] "Meal_eaten_withPrefernottosay"                                   
+[135] "Meal_eaten_withOther"                                            
+[136] "Where_was_this_meal_eaten"                                       
+[137] "Where_was_this_meal_prepared"                                    
+[138] "Activitieswhileeatingmeal_WatchingTV"                            
+[139] "Activitieswhileeatingmeal_On_transport_or_on_the_move"           
+[140] "Activitieswhileeatingmeal_Eating_at_a_table_or_desk"             
+[141] "Activitieswhileeatingmeal_Working_while_eating"                  
+[142] "Activitieswhileeatingmeal_Listening_to_Radio_Music_or_Podcast"   
+[143] "Activitieswhileeatingmeal_Using_Phone_tablet_device_or_computer" 
+[144] "ActivitieswhileeatingmeaI_prefer_not_to_say"                     
+[145] "Activitieswhileeatingmeal_Other"                                 
+[146] "Howlongdidittaketoeatthemeal"                                    
+[147] "How_long_did_it_take_to_eat_the_meal"                            
+[148] "Whocookedthismeal"                                               
+[149] "Whocookedthismeal_Myself"                                        
+[150] "Whocookedthismeal_Partner"                                       
+[151] "Whocookedthismeal_Parents"                                       
+[152] "Whocookedthismeal_Children"                                      
+[153] "Whocookedthismeal_Otherfamilymember"                             
+[154] "Whocookedthismeal_Friends"                                       
+[155] "Whocookedthismeal_Someone_else"                                  
+[156] "Whocookedthismeal_Other"                                         
+[157] "Whocookedthismeal_Iprefernottosay"                               
+[158] "Howlongdidittaketoprepareandcookthemeal"                         
+[159] "Fooduneatenandthrownaway"                                        
+[160] "Fooduneatenandstored"                                            
+[161] "Foodindex"                                                       
+[162] "FoodID"                                                          
+[163] "ParentfoodID"                                                    
+[164] "Searchterm"                                                      
+[165] "Foodcode"                                                        
+[166] "Nameen"                                                          
+[167] "Namelocal"                                                       
+[168] "Readymeal"                                                       
+[169] "Foodgroupcode"                                                   
+[170] "Foodgroupen"                                                     
+[171] "Foodgrouplocal"                                                  
+[172] "Reasonableamount"                                                
+[173] "Nutrienttablename"                                               
+[174] "Nutrienttablecode"                                               
+[175] "MissingfoodID"                                                   
+[176] "Missingname"                                                     
+[177] "Missingbrand"                                                    
+[178] "Missingbarcode"                                                  
+[179] "Missingdescription"                                              
+[180] "Missingportionsize"                                              
+[181] "Brand"                                                           
+[182] "Missingleftovers"                                                
+[183] "Portionmethod"                                                   
+[184] "Portionweight"                                                   
+[185] "Subgroupcode"                                                    
+[186] "Energykcal"                                                      
+[187] "EnergykJ"                                                        
+[188] "Protein"                                                         
+[189] "Carbohydrate"                                                    
+[190] "Totalsugars"                                                     
+[191] "Fat"                                                             
+[192] "SatdFA"                                                          
+[193] "Water"                                                           
+[194] "Totalnitrogen"                                                   
+[195] "Nitrogenconversionfactor"                                        
+[196] "Alcohol"                                                         
+[197] "Englystfibre"                                                    
+[198] "Starch"                                                          
+[199] "AOAC"                                                            
+[200] "Nonmilkextrinsicsugars"                                          
+[201] "Intrinsicandmilksugars"                                          
+[202] "Glucose"                                                         
+[203] "Fructose"                                                        
+[204] "Maltose"                                                         
+[205] "Lactose"                                                         
+[206] "Sucrose"                                                         
+[207] "OthersugarsUK"                                                   
+[208] "FSTablesugar"                                                    
+[209] "FSOtherAddedSugar"                                               
+[210] "FSHoney"                                                         
+[211] "FSFruitJuice"                                                    
+[212] "FSDriedFruit"                                                    
+[213] "FSFruitPuree"                                                    
+[214] "FSStewedFruit"                                                   
+[215] "FSVegetablePuree"                                                
+[216] "CisMonFA"                                                        
+[217] "Cisn3FA"                                                         
+[218] "Cisn6FA"                                                         
+[219] "TransFA"                                                         
+[220] "Cholesterol"                                                     
+[221] "Retinol"                                                         
+[222] "Totalcarotene"                                                   
+[223] "Alphacarotene"                                                   
+[224] "Betacarotene"                                                    
+[225] "Betacryptoxanthin"                                               
+[226] "VitaminA"                                                        
+[227] "VitaminD"                                                        
+[228] "VitaminC"                                                        
+[229] "VitaminE"                                                        
+[230] "VitaminB6"                                                       
+[231] "VitaminB12"                                                      
+[232] "Thiamin"                                                         
+[233] "Riboflavin"                                                      
+[234] "Niacin"                                                          
+[235] "Niacinequivalent"                                                
+[236] "Tryptophan60"                                                    
+[237] "Folate"                                                          
+[238] "Pantothenicacid"                                                 
+[239] "Biotin"                                                          
+[240] "Sodium"                                                          
+[241] "Potassium"                                                       
+[242] "Calcium"                                                         
+[243] "Magnesium"                                                       
+[244] "Phosphorus"                                                      
+[245] "Iron"                                                            
+[246] "Haemiron"                                                        
+[247] "Nonhaemiron"                                                     
+[248] "Copper"                                                          
+[249] "Zinc"                                                            
+[250] "Chloride"                                                        
+[251] "Iodine"                                                          
+[252] "Manganese"                                                       
+[253] "Selenium"                                                        
+[254] "TotalFS"                                                         
+[255] "Fruit"                                                           
+[256] "Driedfruit"                                                      
+[257] "Fruitjuice"                                                      
+[258] "Smoothiefruit"                                                   
+[259] "Tomatoes"                                                        
+[260] "Tomatopuree"                                                     
+[261] "Brassicaceae"                                                    
+[262] "YellowRedGreen"                                                  
+[263] "Beans"                                                           
+[264] "Nuts"                                                            
+[265] "OtherVegetables"                                                 
+[266] "Beef"                                                            
+[267] "Lamb"                                                            
+[268] "Pork"                                                            
+[269] "ProcessedRedMeat"                                                
+[270] "OtherRedMeat"                                                    
+[271] "Burgers"                                                         
+[272] "Sausages"                                                        
+[273] "Offal"                                                           
+[274] "Poultry"                                                         
+[275] "ProcessedPoultry"                                                
+[276] "GameBirds"                                                       
+[277] "WhiteFish"                                                       
+[278] "OilyFish"                                                        
+[279] "Shellfish"                                                       
+[280] "CannedTuna"                                                      
+[281] "CottageCheese"                                                   
+[282] "CheddarCheese"                                                   
+[283] "OtherCheese"                                                     
+[284] "AverageofCFgCO2e100gforFoodCategory"                             
+[285] "AverageofCFgCO2eportionserved"                                   </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the mapping of old column names to new labels</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>diet_mapping <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Toloseweight"</span> <span class="ot">=</span> <span class="st">"To lose weight"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Togainweight"</span> <span class="ot">=</span> <span class="st">"To gain weight"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Formedicalreasons"</span> <span class="ot">=</span> <span class="st">"For medical reasons"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Glutenfree"</span> <span class="ot">=</span> <span class="st">"Gluten free"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Wheatfree"</span> <span class="ot">=</span> <span class="st">"Wheat free"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Dairyfree"</span> <span class="ot">=</span> <span class="st">"Dairy free"</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Vegetarian"</span> <span class="ot">=</span> <span class="st">"Vegetarian"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Vegan"</span> <span class="ot">=</span> <span class="st">"Vegan"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Notonaspecialdiet"</span> <span class="ot">=</span> <span class="st">"Not on a special diet"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SpecialDiet_Other"</span> <span class="ot">=</span> <span class="st">"Other"</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>diet_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"To lose weight"</span>, <span class="st">"To gain weight"</span>, </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>               <span class="st">"For medical reasons"</span>, <span class="st">"Gluten free"</span>, </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Wheat free"</span>, <span class="st">"Dairy free"</span>, </span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Vegetarian"</span>, <span class="st">" Vegan"</span>, </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Not on a special diet"</span>, <span class="st">"Other"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>using plotly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert data to long format</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>long_data <span class="ot">&lt;-</span> survey_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Q6_work_status, <span class="fu">all_of</span>(<span class="fu">names</span>(diet_mapping))) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">all_of</span>(<span class="fu">names</span>(diet_mapping)), <span class="at">names_to =</span> <span class="st">"SpecialDiet"</span>, <span class="at">values_to =</span> <span class="st">"HasDiet"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(HasDiet <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SpecialDiet =</span> <span class="fu">recode</span>(SpecialDiet, <span class="sc">!!!</span>diet_mapping))  <span class="co"># Rename using mapping</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percentages</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>long_data <span class="ot">&lt;-</span> long_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Q6_work_status, SpecialDiet) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Q6_work_status) <span class="sc">%&gt;%</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Percentage =</span> Count <span class="sc">/</span> <span class="fu">sum</span>(Count) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Create plotly stacked bar chart</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(long_data, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(Q6_work_status), <span class="at">y =</span> Percentage, <span class="at">fill =</span> SpecialDiet, </span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                           <span class="at">text =</span> <span class="fu">paste0</span>(SpecialDiet, <span class="st">": "</span>, <span class="fu">round</span>(Percentage, <span class="dv">1</span>), <span class="st">"%"</span>))) <span class="sc">+</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Work Status"</span>, <span class="at">y =</span> <span class="st">"Percentage"</span>, <span class="at">fill =</span> <span class="st">"Special Diet"</span>,</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Proportion of Special Diets by Work Status"</span>) <span class="sc">+</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert ggplot to plotly for interactivity</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>plotly_graph <span class="ot">&lt;-</span> <span class="fu">ggplotly</span>(p, <span class="at">tooltip =</span> <span class="st">"text"</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>plotly_graph</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-ba731d9efcbbfdbce0e7" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ba731d9efcbbfdbce0e7">{"x":{"data":[{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[97.058823529411768,98.591549295774655,83.333333333333314,98.932384341637004,97.169811320754718,97.333333333333343,99.115044247787608,97.092578423871458,97.679814385150806],"x":[1,2,3,6,7,8,9,11,12],"y":[2.941176470588232,1.4084507042253591,16.666666666666671,1.0676156583629819,2.8301886792452819,2.6666666666666572,0.88495575221239164,2.9074215761285416,2.3201856148491942],"text":["Dairy free: 2.9%","Dairy free: 1.4%","Dairy free: 16.7%","Dairy free: 1.1%","Dairy free: 2.8%","Dairy free: 2.7%","Dairy free: 0.9%","Dairy free: 2.9%","Dairy free: 2.3%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Dairy free","legendgroup":"Dairy free","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[90.441176470588232,94.366197183098606,66.666666666666657,95.017793594306042,91.509433962264154,89.333333333333343,97.345132743362839,96.875,91.813312930374906,92.343387470997683],"x":[1,2,3,6,7,8,9,10,11,12],"y":[6.6176470588235361,4.2253521126760489,16.666666666666657,3.914590747330962,5.6603773584905639,8,1.7699115044247691,3.125,5.2792654934965526,5.3364269141531224],"text":["For medical reasons: 6.6%","For medical reasons: 4.2%","For medical reasons: 16.7%","For medical reasons: 3.9%","For medical reasons: 5.7%","For medical reasons: 8%","For medical reasons: 1.8%","For medical reasons: 3.1%","For medical reasons: 5.3%","For medical reasons: 5.3%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(216,144,0,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"For medical reasons","legendgroup":"For medical reasons","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[85.294117647058826,93.950177935943046,86.79245283018868,82.666666666666671,95.575221238938056,87.452180566182093,87.470997679814388],"x":[1,6,7,8,9,11,12],"y":[5.1470588235294059,1.0676156583629961,4.7169811320754746,6.6666666666666714,1.7699115044247833,4.3611323641928124,4.872389791183295],"text":["Gluten free: 5.1%","Gluten free: 1.1%","Gluten free: 4.7%","Gluten free: 6.7%","Gluten free: 1.8%","Gluten free: 4.4%","Gluten free: 4.9%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(163,165,0,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Gluten free","legendgroup":"Gluten free","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[26.470588235294116,21.12676056338028,49.999999999999993,31.81818181818182,41.17647058823529,17.081850533807831,17.924528301886792,34.666666666666671,36.283185840707965,31.25,30.910482019892882,30.162412993039442,85.714285714285708],"x":[1,2,3,4,5,6,7,8,9,10,11,12,13],"y":[58.82352941176471,73.239436619718333,16.666666666666664,68.181818181818159,58.82352941176471,76.868327402135208,68.867924528301884,48,59.292035398230091,65.625,56.541698546289211,57.30858468677495,14.285714285714292],"text":["Not on a special diet: 58.8%","Not on a special diet: 73.2%","Not on a special diet: 16.7%","Not on a special diet: 68.2%","Not on a special diet: 58.8%","Not on a special diet: 76.9%","Not on a special diet: 68.9%","Not on a special diet: 48%","Not on a special diet: 59.3%","Not on a special diet: 65.6%","Not on a special diet: 56.5%","Not on a special diet: 57.3%","Not on a special diet: 14.3%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(57,182,0,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Not on a special diet","legendgroup":"Not on a special diet","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[22.794117647058822,27.272727272727273,35.294117647058826,12.811387900355871,13.20754716981132,34.513274336283189,30.451415455241008,28.538283062645011],"x":[1,4,5,6,7,9,11,12],"y":[3.6764705882352935,4.5454545454545467,5.8823529411764639,4.2704626334519595,4.7169811320754711,1.7699115044247762,0.45906656465187368,1.6241299303944317],"text":["Other: 3.7%","Other: 4.5%","Other: 5.9%","Other: 4.3%","Other: 4.7%","Other: 1.8%","Other: 0.5%","Other: 1.6%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,125,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Other","legendgroup":"Other","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[19.852941176470587,19.718309859154928,12.264150943396226,28.000000000000004,29.20353982300885,21.875,22.570772762050495,24.129930394431554,28.571428571428569],"x":[1,2,7,8,9,10,11,12,13],"y":[2.9411764705882355,1.408450704225352,0.94339622641509457,6.6666666666666679,5.3097345132743392,9.375,7.8806426931905129,4.4083526682134568,57.142857142857139],"text":["To gain weight: 2.9%","To gain weight: 1.4%","To gain weight: 0.9%","To gain weight: 6.7%","To gain weight: 5.3%","To gain weight: 9.4%","To gain weight: 7.9%","To gain weight: 4.4%","To gain weight: 57.1%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,191,196,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"To gain weight","legendgroup":"To gain weight","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[9.5588235294117645,7.042253521126761,16.666666666666664,23.529411764705884,4.6263345195729544,4.716981132075472,10.666666666666668,7.0796460176991154,0,8.2631981637337404,7.8886310904872383,0],"x":[1,2,3,5,6,7,8,9,10,11,12,13],"y":[10.294117647058822,12.676056338028168,33.333333333333329,11.764705882352942,8.185053380782918,7.5471698113207539,17.333333333333336,22.123893805309734,21.875,14.307574598316755,16.241299303944317,28.571428571428569],"text":["To lose weight: 10.3%","To lose weight: 12.7%","To lose weight: 33.3%","To lose weight: 11.8%","To lose weight: 8.2%","To lose weight: 7.5%","To lose weight: 17.3%","To lose weight: 22.1%","To lose weight: 21.9%","To lose weight: 14.3%","To lose weight: 16.2%","To lose weight: 28.6%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(0,176,246,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"To lose weight","legendgroup":"To lose weight","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858],"base":[22.727272727272727,17.647058823529413,4.2704626334519578,9.3333333333333339,6.8859984697781176,6.2645011600928076],"x":[4,5,6,8,11,12],"y":[4.5454545454545467,5.882352941176471,0.35587188612099663,1.3333333333333339,1.3771996939556228,1.6241299303944308],"text":["Vegan: 4.5%","Vegan: 5.9%","Vegan: 0.4%","Vegan: 1.3%","Vegan: 1.4%","Vegan: 1.6%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(149,144,255,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Vegan","legendgroup":"Vegan","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000013,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[2.9411764705882351,0,0,0,0,0,0.94339622641509435,5.3333333333333339,2.6548672566371683,2.0657995409334351,1.8561484918793503],"x":[1,2,3,4,5,6,7,8,9,11,12],"y":[6.617647058823529,7.042253521126761,16.666666666666664,22.727272727272727,17.647058823529413,4.2704626334519578,3.7735849056603774,4,4.4247787610619476,4.8201989288446825,4.4083526682134568],"text":["Vegetarian: 6.6%","Vegetarian: 7%","Vegetarian: 16.7%","Vegetarian: 22.7%","Vegetarian: 17.6%","Vegetarian: 4.3%","Vegetarian: 3.8%","Vegetarian: 4%","Vegetarian: 4.4%","Vegetarian: 4.8%","Vegetarian: 4.4%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(231,107,243,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Vegetarian","legendgroup":"Vegetarian","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.89999999999999991,0.90000000000000036,0.89999999999999947,0.89999999999999858,0.89999999999999858,0.89999999999999858],"base":[0,0,0,0,0,0],"x":[1,7,8,9,11,12],"y":[2.9411764705882351,0.94339622641509435,5.3333333333333339,2.6548672566371683,2.0657995409334351,1.8561484918793503],"text":["Wheat free: 2.9%","Wheat free: 0.9%","Wheat free: 5.3%","Wheat free: 2.7%","Wheat free: 2.1%","Wheat free: 1.9%"],"type":"bar","textposition":"none","marker":{"autocolorscale":false,"color":"rgba(255,98,188,1)","line":{"width":1.8897637795275593,"color":"transparent"}},"name":"Wheat free","legendgroup":"Wheat free","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.762557077625573,"r":7.3059360730593621,"b":40.182648401826491,"l":43.105022831050235},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Proportion of Special Diets by Work Status","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,13.6],"tickmode":"array","ticktext":["2","3","4","5","6","7","8","9","10","11","12","13"],"tickvals":[1,2,3,4,5,6,7,8,9,10,11,12],"categoryorder":"array","categoryarray":["2","3","4","5","6","7","8","9","10","11","12","13"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Work Status","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-5.0000000000000009,105.00000000000001],"tickmode":"array","ticktext":["0","25","50","75","100"],"tickvals":[0,25,50,75,100],"categoryorder":"array","categoryarray":["0","25","50","75","100"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Percentage","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Special Diet","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"7bb8134a1d2c":{"x":{},"y":{},"fill":{},"text":{},"type":"bar"}},"cur_data":"7bb8134a1d2c","visdat":{"7bb8134a1d2c":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Looking at Food Security 1st summary then against Fruits and Veggies/Fresh Food</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">as.factor</span>(intake_data<span class="sc">$</span>Combination1FoodSecurity))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    0     1     2     3     4     5     6     8     9    10    12    15    16 
+17737  1069  2155  2088  1427   872  1043   668   333   519   523   365   116 
+   18    20    24    25    30  NA's 
+   26   331    40   203   127    10 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the Combination1FoodSecurity column to a factor</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>intake_data<span class="sc">$</span>Combination1FoodSecurity <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(intake_data<span class="sc">$</span>Combination1FoodSecurity)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(intake_data, <span class="fu">aes</span>(<span class="at">x =</span> Combination1FoodSecurity)) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Food Security Levels"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Food Security Levels"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="page1_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(intake_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "transaction_id"                                                  
+  [2] "Q57_age"                                                         
+  [3] "Gender_1"                                                        
+  [4] "Q59_Where_do_you_live_1"                                         
+  [5] "Q59_7_TEXT"                                                      
+  [6] "Q5_Which_of_the_following_best_describes_the_area_you_live_in"   
+  [7] "Q5_7_TEXT"                                                       
+  [8] "Q6_work_status_1"                                                
+  [9] "Q6_11_TEXT"                                                      
+ [10] "Q7_Highest_academic_qualification_that_you_have_achieved"        
+ [11] "Q7_10_TEXT"                                                      
+ [12] "Q8UK_Ethnic_Origin"                                              
+ [13] "Ethgrp_White1"                                                   
+ [14] "Ethgrp_Black1"                                                   
+ [15] "Ethgrp_Asian1"                                                   
+ [16] "Ethgrp_Mixed1"                                                   
+ [17] "Ethgrp_Other1"                                                   
+ [18] "Ethgrp_Prefernottosay1"                                          
+ [19] "Household_income_1"                                              
+ [20] "Specialdiet"                                                     
+ [21] "Specialdiet_Toloseweight1"                                       
+ [22] "Specialdiet_Togainweight1"                                       
+ [23] "Specialdiet_Formedicalreasonse.g.tolowercholesterol1"            
+ [24] "Specialdiet_Glutenfree1"                                         
+ [25] "Specialdiet_Wheatfree1"                                          
+ [26] "Specialdiet_Dairyfree1"                                          
+ [27] "Specialdiet_Vegetarian1"                                         
+ [28] "Specialdiet_Vegan1"                                              
+ [29] "Specialdiet_Notonaspecialdiet1"                                  
+ [30] "Specialdiet_Otheradddetail1"                                     
+ [31] "EatingOutofHome7DayRecall"                                       
+ [32] "CuisineandFood"                                                  
+ [33] "CuisineTypesinLastWeek_TraditionalBritish1"                      
+ [34] "CuisineTypesinLastWeeko_ModernBritish1"                          
+ [35] "CuisineTypesinLastWeek_Pub1"                                     
+ [36] "CuisineTypesinLastWeek_Italian1"                                 
+ [37] "CuisineTypesinLastWeek_Indian1"                                  
+ [38] "CuisineTypesinLastWeek_Chinese1"                                 
+ [39] "CuisineTypesinLastWeek_American1"                                
+ [40] "CuisineTypesinLastWeek_Thai1"                                    
+ [41] "CuisineTypesinLastWeek_Japanese1"                                
+ [42] "CuisineTypesinLastWeek_Korean1"                                  
+ [43] "CuisineTypesinLastWeek_French1"                                  
+ [44] "CuisineTypesinLastWeek_Greek1"                                   
+ [45] "CuisineTypesinLastWeek_Spanish1"                                 
+ [46] "CuisineTypesinLastWeek_African1"                                 
+ [47] "CuisineTypesinLastWeek_Caribbean1"                               
+ [48] "CuisineTypesinLastWeeko_EasternEuropean1"                        
+ [49] "CuisineTypesinLastWeeko_MiddleEastern1"                          
+ [50] "CuisineTypesinLastWeeko_Mexican1"                                
+ [51] "CuisineTypesinLastWeeko_Vegetarian1"                             
+ [52] "CuisineTypesinLastWeek_Vegan1"                                   
+ [53] "CuisineTypesinLastWeeko_lprefernottosay1"                        
+ [54] "CuisineTypesinLastWeek_Other1"                                   
+ [55] "LabourShopping1"                                                 
+ [56] "LabourCooking1"                                                  
+ [57] "CookingSkill1"                                                   
+ [58] "AskaboutFoodSourceMonthlyAggregated"                             
+ [59] "AskaboutFoodSourceMonthly01Independent"                          
+ [60] "AskaboutFoodSourceMonthly02Localmarket"                          
+ [61] "AskaboutFoodSourceMonthly03Vegetablebox"                         
+ [62] "AskaboutFoodSourceMonthly04Petrolstation"                        
+ [63] "AskaboutFoodSourceMonthly05Cornerconvenience"                    
+ [64] "AskaboutFoodSourceMonthly06Smallsupermarketchain"                
+ [65] "AskaboutFoodSourceMonthly07Largeupermarketchain"                 
+ [66] "AskaboutFoodSourceMonthly08Budgetsupermarketchain"               
+ [67] "AskaboutFoodSourceMonthly09Foodbank"                             
+ [68] "AskaboutFoodSourceMonthly10Foodsharingapp"                       
+ [69] "AskaboutFoodSourceMonthly11Fooddeliveryapp"                      
+ [70] "AskaboutFoodSourceMonthly12Recipebox"                            
+ [71] "AskaboutFoodSourceMonthly13Onlineonly"                           
+ [72] "AskaboutFoodSourceMonthly14Iprefernottosay"                      
+ [73] "TransportAggregated"                                             
+ [74] "Transport01_car"                                                 
+ [75] "Transport02_bike"                                                
+ [76] "Transport03_PublicTrans_bus"                                     
+ [77] "Transport04_Public_train_tube"                                   
+ [78] "Transport05_Walking"                                             
+ [79] "Transport06_prefernottosay"                                      
+ [80] "Transport07_other"                                               
+ [81] "FoodInsecurity1"                                                 
+ [82] "FoodSecurity1"                                                   
+ [83] "FoodInsecurity2"                                                 
+ [84] "FoundmyselfunabletobuyfoodduetolackofmoneyFood_Sec2"             
+ [85] "BeenunabletoaffordtoeathealthybalancedmealsFood_Sec2"            
+ [86] "CutmealsizeFood_Sec2"                                            
+ [87] "SkippedmealsFood_Sec2"                                           
+ [88] "BeenhungryFood_Sec2"                                             
+ [89] "ObtainedfoodfromafoodbankFood_Sec2"                              
+ [90] "ReducedthequantityFood_Sec2"                                     
+ [91] "Hadtobuycheaperfoodthatcompromiseson...Food_Sec2"                
+ [92] "SwappedbrandedproductsforcheaperFood_Sec2"                       
+ [93] "CookedfromscratchFood_Sec2"                                      
+ [94] "locallyproducedfoodsFood_Sec2"                                   
+ [95] "BulkedoutmealsFood_Sec2"                                         
+ [96] "AnotherFood_Sec2"                                                
+ [97] "NoneoftheseFood_Sec2"                                            
+ [98] "FoodSecurity2SumHARD"                                            
+ [99] "FoodSecurity2SumSOFT"                                            
+[100] "Combination1FoodSecurity"                                        
+[101] "MealIndex"                                                       
+[102] "MealID"                                                          
+[103] "Meal_name"                                                       
+[104] "Mealtime"                                                        
+[105] "Mealfoodsource"                                                  
+[106] "Mealfoodsource_Burger_chip_or_kebab_van_streetfood"              
+[107] "Mealfoodsource_Supermarket_localshop_petrolstation_householdshop"
+[108] "Mealfoodsource_Supermarket_localshoppetrolstation_food_on_the_go"
+[109] "Mealfoodsource_Canteen_at_work_or_school_university_college"     
+[110] "Mealfoodsource_Fastfood_takeaway_outlet"                         
+[111] "Mealfoodsource_Foodbank_charity_communityorgov_tfood_delivery"   
+[112] "Mealfoodsource_Foodsharing_app_e.g.OlioTooGoodtoGo"              
+[113] "Mealfoodsource_Leisurecentre_recreation_or_entertainmentvenue"   
+[114] "Mealfoodsource_Don.t_know"                                       
+[115] "Mealfoodsource_I_prefer_not_to_say"                              
+[116] "Mealfoodsource_online_only_provider_or_marketplace"              
+[117] "Mealfoodsource_Restaurant_or_pub"                                
+[118] "Mealfoodsource_Recipebox_delivered_to_you"                       
+[119] "Mealfoodsource_Vegetable_box_or_farm_deliveries"                 
+[120] "Mealfoodsource_Vending_machine_in_any_location"                  
+[121] "Mealfoodsource_Other"                                            
+[122] "Whowasthismealeatenwith"                                         
+[123] "Meal_eaten_withAlone"                                            
+[124] "Meal_eaten_withCarer"                                            
+[125] "Meal_eaten_withChildren"                                         
+[126] "Meal_eaten_withFlatmates"                                        
+[127] "Meal_eaten_withFriends"                                          
+[128] "Meal_eaten_withParents"                                          
+[129] "Meal_eaten_withPartners"                                         
+[130] "Meal_eaten_withWorkcolleagues"                                   
+[131] "Meal_eaten_withWiderFamily"                                      
+[132] "Meal_eaten_withSiblings"                                         
+[133] "Meal_eaten_withOthersGeneralPublic"                              
+[134] "Meal_eaten_withPrefernottosay"                                   
+[135] "Meal_eaten_withOther"                                            
+[136] "Where_was_this_meal_eaten"                                       
+[137] "Where_was_this_meal_prepared"                                    
+[138] "Activitieswhileeatingmeal_WatchingTV"                            
+[139] "Activitieswhileeatingmeal_On_transport_or_on_the_move"           
+[140] "Activitieswhileeatingmeal_Eating_at_a_table_or_desk"             
+[141] "Activitieswhileeatingmeal_Working_while_eating"                  
+[142] "Activitieswhileeatingmeal_Listening_to_Radio_Music_or_Podcast"   
+[143] "Activitieswhileeatingmeal_Using_Phone_tablet_device_or_computer" 
+[144] "ActivitieswhileeatingmeaI_prefer_not_to_say"                     
+[145] "Activitieswhileeatingmeal_Other"                                 
+[146] "Howlongdidittaketoeatthemeal"                                    
+[147] "How_long_did_it_take_to_eat_the_meal"                            
+[148] "Whocookedthismeal"                                               
+[149] "Whocookedthismeal_Myself"                                        
+[150] "Whocookedthismeal_Partner"                                       
+[151] "Whocookedthismeal_Parents"                                       
+[152] "Whocookedthismeal_Children"                                      
+[153] "Whocookedthismeal_Otherfamilymember"                             
+[154] "Whocookedthismeal_Friends"                                       
+[155] "Whocookedthismeal_Someone_else"                                  
+[156] "Whocookedthismeal_Other"                                         
+[157] "Whocookedthismeal_Iprefernottosay"                               
+[158] "Howlongdidittaketoprepareandcookthemeal"                         
+[159] "Fooduneatenandthrownaway"                                        
+[160] "Fooduneatenandstored"                                            
+[161] "Foodindex"                                                       
+[162] "FoodID"                                                          
+[163] "ParentfoodID"                                                    
+[164] "Searchterm"                                                      
+[165] "Foodcode"                                                        
+[166] "Nameen"                                                          
+[167] "Namelocal"                                                       
+[168] "Readymeal"                                                       
+[169] "Foodgroupcode"                                                   
+[170] "Foodgroupen"                                                     
+[171] "Foodgrouplocal"                                                  
+[172] "Reasonableamount"                                                
+[173] "Nutrienttablename"                                               
+[174] "Nutrienttablecode"                                               
+[175] "MissingfoodID"                                                   
+[176] "Missingname"                                                     
+[177] "Missingbrand"                                                    
+[178] "Missingbarcode"                                                  
+[179] "Missingdescription"                                              
+[180] "Missingportionsize"                                              
+[181] "Brand"                                                           
+[182] "Missingleftovers"                                                
+[183] "Portionmethod"                                                   
+[184] "Portionweight"                                                   
+[185] "Subgroupcode"                                                    
+[186] "Energykcal"                                                      
+[187] "EnergykJ"                                                        
+[188] "Protein"                                                         
+[189] "Carbohydrate"                                                    
+[190] "Totalsugars"                                                     
+[191] "Fat"                                                             
+[192] "SatdFA"                                                          
+[193] "Water"                                                           
+[194] "Totalnitrogen"                                                   
+[195] "Nitrogenconversionfactor"                                        
+[196] "Alcohol"                                                         
+[197] "Englystfibre"                                                    
+[198] "Starch"                                                          
+[199] "AOAC"                                                            
+[200] "Nonmilkextrinsicsugars"                                          
+[201] "Intrinsicandmilksugars"                                          
+[202] "Glucose"                                                         
+[203] "Fructose"                                                        
+[204] "Maltose"                                                         
+[205] "Lactose"                                                         
+[206] "Sucrose"                                                         
+[207] "OthersugarsUK"                                                   
+[208] "FSTablesugar"                                                    
+[209] "FSOtherAddedSugar"                                               
+[210] "FSHoney"                                                         
+[211] "FSFruitJuice"                                                    
+[212] "FSDriedFruit"                                                    
+[213] "FSFruitPuree"                                                    
+[214] "FSStewedFruit"                                                   
+[215] "FSVegetablePuree"                                                
+[216] "CisMonFA"                                                        
+[217] "Cisn3FA"                                                         
+[218] "Cisn6FA"                                                         
+[219] "TransFA"                                                         
+[220] "Cholesterol"                                                     
+[221] "Retinol"                                                         
+[222] "Totalcarotene"                                                   
+[223] "Alphacarotene"                                                   
+[224] "Betacarotene"                                                    
+[225] "Betacryptoxanthin"                                               
+[226] "VitaminA"                                                        
+[227] "VitaminD"                                                        
+[228] "VitaminC"                                                        
+[229] "VitaminE"                                                        
+[230] "VitaminB6"                                                       
+[231] "VitaminB12"                                                      
+[232] "Thiamin"                                                         
+[233] "Riboflavin"                                                      
+[234] "Niacin"                                                          
+[235] "Niacinequivalent"                                                
+[236] "Tryptophan60"                                                    
+[237] "Folate"                                                          
+[238] "Pantothenicacid"                                                 
+[239] "Biotin"                                                          
+[240] "Sodium"                                                          
+[241] "Potassium"                                                       
+[242] "Calcium"                                                         
+[243] "Magnesium"                                                       
+[244] "Phosphorus"                                                      
+[245] "Iron"                                                            
+[246] "Haemiron"                                                        
+[247] "Nonhaemiron"                                                     
+[248] "Copper"                                                          
+[249] "Zinc"                                                            
+[250] "Chloride"                                                        
+[251] "Iodine"                                                          
+[252] "Manganese"                                                       
+[253] "Selenium"                                                        
+[254] "TotalFS"                                                         
+[255] "Fruit"                                                           
+[256] "Driedfruit"                                                      
+[257] "Fruitjuice"                                                      
+[258] "Smoothiefruit"                                                   
+[259] "Tomatoes"                                                        
+[260] "Tomatopuree"                                                     
+[261] "Brassicaceae"                                                    
+[262] "YellowRedGreen"                                                  
+[263] "Beans"                                                           
+[264] "Nuts"                                                            
+[265] "OtherVegetables"                                                 
+[266] "Beef"                                                            
+[267] "Lamb"                                                            
+[268] "Pork"                                                            
+[269] "ProcessedRedMeat"                                                
+[270] "OtherRedMeat"                                                    
+[271] "Burgers"                                                         
+[272] "Sausages"                                                        
+[273] "Offal"                                                           
+[274] "Poultry"                                                         
+[275] "ProcessedPoultry"                                                
+[276] "GameBirds"                                                       
+[277] "WhiteFish"                                                       
+[278] "OilyFish"                                                        
+[279] "Shellfish"                                                       
+[280] "CannedTuna"                                                      
+[281] "CottageCheese"                                                   
+[282] "CheddarCheese"                                                   
+[283] "OtherCheese"                                                     
+[284] "AverageofCFgCO2e100gforFoodCategory"                             
+[285] "AverageofCFgCO2eportionserved"                                   </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extracting relevant columns</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>food_data <span class="ot">&lt;-</span> intake_data[, <span class="fu">c</span>(<span class="st">"Combination1FoodSecurity"</span>, <span class="st">"Fruit"</span>, <span class="st">"Driedfruit"</span>, <span class="st">"Fruitjuice"</span>, <span class="st">"Smoothiefruit"</span>, <span class="st">"Tomatoes"</span>)]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Combination1FoodSecurity to factor if not already</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>food_data<span class="sc">$</span>Combination1FoodSecurity <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(food_data<span class="sc">$</span>Combination1FoodSecurity)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check if any values are missing</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(food_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Combination1FoodSecurity     Fruit            Driedfruit      
+ 0      :17737            Min.   :   0.000   Min.   :  0.0000  
+ 2      : 2155            1st Qu.:   0.000   1st Qu.:  0.0000  
+ 3      : 2088            Median :   0.000   Median :  0.0000  
+ 4      : 1427            Mean   :   3.851   Mean   :  0.2694  
+ 1      : 1069            3rd Qu.:   0.000   3rd Qu.:  0.0000  
+ (Other): 5166            Max.   :1000.000   Max.   :484.5211  
+ NA's   :   10            NA's   :391        NA's   :391       
+   Fruitjuice       Smoothiefruit         Tomatoes      
+ Min.   :   0.000   Min.   :  0.0000   Min.   :  0.000  
+ 1st Qu.:   0.000   1st Qu.:  0.0000   1st Qu.:  0.000  
+ Median :   0.000   Median :  0.0000   Median :  0.000  
+ Mean   :   5.243   Mean   :  0.3691   Mean   :  2.428  
+ 3rd Qu.:   0.000   3rd Qu.:  0.0000   3rd Qu.:  0.000  
+ Max.   :4200.000   Max.   :339.8184   Max.   :797.875  
+ NA's   :391        NA's   :391        NA's   :391      </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the relationship using ggplot2</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting the comparison of food security levels with fruit consumption</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(food_data, <span class="fu">aes</span>(<span class="at">x =</span> Combination1FoodSecurity, <span class="at">y =</span> Fruit, <span class="at">fill =</span> Combination1FoodSecurity)) <span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Food Security vs. Fruit Consumption"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Food Security Levels"</span>,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Fruit Consumption (units)"</span>) <span class="sc">+</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 391 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="page1_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Repeat for other fruit/vegetable columns like Driedfruit, Fruitjuice, etc.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>University of Sheffield</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

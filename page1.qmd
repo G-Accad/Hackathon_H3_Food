@@ -1,0 +1,155 @@
+---
+title: "EDA"
+author: "grace"
+date: "2025-03-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(plotly)
+
+survey_data<- read.csv("C:/Users/cs1gac/Documents/Git/H3_X_Food_&_You/Material/H3-Food-Practice-Survey-Hackathon_060325_v1.csv")
+
+intake_data<- read.csv("C:/Users/cs1gac/Documents/Git/H3_X_Food_&_You/Material/H3-Food-PracticeIntake24_Hackathon_100325_v2.csv")
+
+```
+
+
+```{r}
+colnames(survey_data)
+```
+
+
+
+```{r}
+summary(as.factor(survey_data$Q6_work_status))
+```
+
+```{r}
+summary(as.factor(intake_data$Specialdiet))
+```
+
+
+```{r}
+colnames(intake_data)
+```
+
+
+```{r}
+# Define the mapping of old column names to new labels
+
+diet_mapping <- c(
+  "SpecialDiet_Toloseweight" = "To lose weight",
+  "SpecialDiet_Togainweight" = "To gain weight",
+  "SpecialDiet_Formedicalreasons" = "For medical reasons",
+  "SpecialDiet_Glutenfree" = "Gluten free",
+  "SpecialDiet_Wheatfree" = "Wheat free",
+  "SpecialDiet_Dairyfree" = "Dairy free",
+  "SpecialDiet_Vegetarian" = "Vegetarian",
+  "SpecialDiet_Vegan" = "Vegan",
+  "SpecialDiet_Notonaspecialdiet" = "Not on a special diet",
+  "SpecialDiet_Other" = "Other"
+)
+
+
+
+diet_cols <- c("To lose weight", "To gain weight", 
+               "For medical reasons", "Gluten free", 
+               "Wheat free", "Dairy free", 
+               "Vegetarian", " Vegan", 
+               "Not on a special diet", "Other")
+```
+
+
+using plotly:
+
+```{r}
+# Convert data to long format
+long_data <- survey_data %>%
+  select(Q6_work_status, all_of(names(diet_mapping))) %>%
+  pivot_longer(cols = all_of(names(diet_mapping)), names_to = "SpecialDiet", values_to = "HasDiet") %>%
+  filter(HasDiet == 1) %>%
+  mutate(SpecialDiet = recode(SpecialDiet, !!!diet_mapping))  # Rename using mapping
+
+# Calculate percentages
+long_data <- long_data %>%
+  group_by(Q6_work_status, SpecialDiet) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  group_by(Q6_work_status) %>%
+  mutate(Percentage = Count / sum(Count) * 100)
+
+# Create plotly stacked bar chart
+p <- ggplot(long_data, aes(x = as.factor(Q6_work_status), y = Percentage, fill = SpecialDiet, 
+                           text = paste0(SpecialDiet, ": ", round(Percentage, 1), "%"))) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = "Work Status", y = "Percentage", fill = "Special Diet",
+       title = "Proportion of Special Diets by Work Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Convert ggplot to plotly for interactivity
+plotly_graph <- ggplotly(p, tooltip = "text")
+
+plotly_graph
+```
+
+Looking at Food Security 
+1st summary
+then against Fruits and Veggies/Fresh Food
+
+
+```{r}
+summary(as.factor(intake_data$Combination1FoodSecurity))
+
+```
+
+
+```{r}
+# Convert the Combination1FoodSecurity column to a factor
+intake_data$Combination1FoodSecurity <- as.factor(intake_data$Combination1FoodSecurity)
+
+
+
+ggplot(intake_data, aes(x = Combination1FoodSecurity)) +
+  geom_bar(fill = "steelblue", color = "black") +
+  labs(title = "Distribution of Food Security Levels",
+       x = "Food Security Levels",
+       y = "Count") +
+  theme_minimal()
+
+```
+
+```{r}
+colnames(intake_data)
+```
+
+
+
+```{r}
+# Extracting relevant columns
+food_data <- intake_data[, c("Combination1FoodSecurity", "Fruit", "Driedfruit", "Fruitjuice", "Smoothiefruit", "Tomatoes")]
+
+# Convert Combination1FoodSecurity to factor if not already
+food_data$Combination1FoodSecurity <- as.factor(food_data$Combination1FoodSecurity)
+
+# Check if any values are missing
+summary(food_data)
+
+# Visualize the relationship using ggplot2
+library(ggplot2)
+
+# Plotting the comparison of food security levels with fruit consumption
+ggplot(food_data, aes(x = Combination1FoodSecurity, y = Fruit, fill = Combination1FoodSecurity)) +
+  geom_boxplot() +
+  labs(title = "Food Security vs. Fruit Consumption",
+       x = "Food Security Levels",
+       y = "Fruit Consumption (units)") +
+  theme_minimal()
+
+# Repeat for other fruit/vegetable columns like Driedfruit, Fruitjuice, etc.
+
+```
