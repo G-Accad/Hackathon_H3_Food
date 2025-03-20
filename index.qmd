@@ -1,5 +1,7 @@
 ---
-title: "Homepage"
+title: "Food Security and Insecurity Dashboard"
+author: "Grace and Richard and Niamh"
+date: "2025-03-13"
 format: 
   html:
     theme: cosmo
@@ -8,18 +10,24 @@ format:
 
 ## Introduction
 
-This dashboard presents food security data.
+Welcome to the **Food Security and Insecurity Dashboard**.  
+This dashboard explores **patterns of food security and insecurity** using data from the H3-FPCUK survey.  
+
+### **What is Food Security?**
+Food security means having reliable access to **enough affordable, nutritious food**.  
+Conversely, food insecurity occurs when individuals **struggle to afford or access food**, leading to **poor diet quality, skipped meals, or hunger**.  
+
+### **What’s in this Dashboard?**
+- **Food Security Overview**: Trends in food security across different groups.  
+- **Food Consumption & Nutrition**: How food security affects **fruit & vegetable intake**.  
 
 
-```{r}
-# Sample R code to visualize food insecurity data
-library(ggplot2)
-data <- data.frame(
-  Category = c("Food Secure", "Moderate Insecurity", "Another Category", "Very Insecure"),
-  Value = c(50, 20, 15, 15)
-)
-ggplot(data, aes(x = Category, y = Value, fill = Category)) +
-  geom_bar(stat = "identity") +
-  theme_minimal()
+```{r, include=FALSE}
+How does food insecurity affect your diet and lifestyle
+
+# if time allows it:add the following
+# - **Special Diets & Food Security**: Examining dietary restrictions among food-insecure individuals.  
 ```
+
+
 

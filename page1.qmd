@@ -1,5 +1,5 @@
 ---
-title: "EDA"
+title: "Page1?"
 author: "grace"
 date: "2025-03-13"
 output: html_document
@@ -12,36 +12,19 @@ library(dplyr)
 library(tidyr)
 library(plotly)
 
-survey_data<- read.csv("C:/Users/cs1gac/Documents/Git/H3_X_Food_&_You/Material/H3-Food-Practice-Survey-Hackathon_060325_v1.csv")
+survey_data<- read.csv("C:/Users/cs1gac/Documents/Git/Hackathon_H3_Food/Material/H3-Food-Practice-Survey-Hackathon_060325_v1.csv")
 
-intake_data<- read.csv("C:/Users/cs1gac/Documents/Git/H3_X_Food_&_You/Material/H3-Food-PracticeIntake24_Hackathon_100325_v2.csv")
+intake_data<- read.csv("C:/Users/cs1gac/Documents/Git/Hackathon_H3_Food/Material/H3-Food-PracticeIntake24_Hackathon_100325_v2.csv")
 
 ```
 
 
-```{r}
-colnames(survey_data)
-```
+Plot with Richard
 
-
-
-```{r}
-summary(as.factor(survey_data$Q6_work_status))
-```
-
-```{r}
-summary(as.factor(intake_data$Specialdiet))
-```
-
-
-```{r}
-colnames(intake_data)
-```
-
-
-```{r}
+```{r, echo=FALSE}
 # Define the mapping of old column names to new labels
 
+# Mapping special diets
 diet_mapping <- c(
   "SpecialDiet_Toloseweight" = "To lose weight",
   "SpecialDiet_Togainweight" = "To gain weight",
@@ -55,25 +38,12 @@ diet_mapping <- c(
   "SpecialDiet_Other" = "Other"
 )
 
-
-
-diet_cols <- c("To lose weight", "To gain weight", 
-               "For medical reasons", "Gluten free", 
-               "Wheat free", "Dairy free", 
-               "Vegetarian", " Vegan", 
-               "Not on a special diet", "Other")
-```
-
-
-using plotly:
-
-```{r}
-# Convert data to long format
+# Reshape data
 long_data <- survey_data %>%
   select(Q6_work_status, all_of(names(diet_mapping))) %>%
   pivot_longer(cols = all_of(names(diet_mapping)), names_to = "SpecialDiet", values_to = "HasDiet") %>%
   filter(HasDiet == 1) %>%
-  mutate(SpecialDiet = recode(SpecialDiet, !!!diet_mapping))  # Rename using mapping
+  mutate(SpecialDiet = recode(SpecialDiet, !!!diet_mapping)) 
 
 # Calculate percentages
 long_data <- long_data %>%
@@ -82,7 +52,7 @@ long_data <- long_data %>%
   group_by(Q6_work_status) %>%
   mutate(Percentage = Count / sum(Count) * 100)
 
-# Create plotly stacked bar chart
+# Create interactive stacked bar chart
 p <- ggplot(long_data, aes(x = as.factor(Q6_work_status), y = Percentage, fill = SpecialDiet, 
                            text = paste0(SpecialDiet, ": ", round(Percentage, 1), "%"))) +
   geom_bar(stat = "identity", position = "stack") +
@@ -91,41 +61,39 @@ p <- ggplot(long_data, aes(x = as.factor(Q6_work_status), y = Percentage, fill =
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Convert ggplot to plotly for interactivity
-plotly_graph <- ggplotly(p, tooltip = "text")
-
-plotly_graph
-```
-
-Looking at Food Security 
-1st summary
-then against Fruits and Veggies/Fresh Food
-
-
-```{r}
-summary(as.factor(intake_data$Combination1FoodSecurity))
+ggplotly(p, tooltip = "text")
 
 ```
 
 
-```{r}
-# Convert the Combination1FoodSecurity column to a factor
+
+Looking at Food Security Hackathon event 2
+
+
+
+
+```{r, echo=FALSE}
+# Convert food security levels to factors
 intake_data$Combination1FoodSecurity <- as.factor(intake_data$Combination1FoodSecurity)
 
-
-
-ggplot(intake_data, aes(x = Combination1FoodSecurity)) +
+# Plot food security distribution
+p1 <- ggplot(intake_data, aes(x = Combination1FoodSecurity)) +
   geom_bar(fill = "steelblue", color = "black") +
   labs(title = "Distribution of Food Security Levels",
        x = "Food Security Levels",
        y = "Count") +
-  theme_minimal()
+  theme_classic()
+
+ggplotly(p1)  # Convert to interactive
 
 ```
+Here is the breakdown: 
+0 --> Food secure
+1-3 Moderate 
+4-30 Low/Very Low
 
-```{r}
-colnames(intake_data)
-```
+But the plot above is not right as each user has many inputs, so i need to aggreagate them by user
+
 
 
 
@@ -136,11 +104,7 @@ food_data <- intake_data[, c("Combination1FoodSecurity", "Fruit", "Driedfruit", 
 # Convert Combination1FoodSecurity to factor if not already
 food_data$Combination1FoodSecurity <- as.factor(food_data$Combination1FoodSecurity)
 
-# Check if any values are missing
-summary(food_data)
 
-# Visualize the relationship using ggplot2
-library(ggplot2)
 
 # Plotting the comparison of food security levels with fruit consumption
 ggplot(food_data, aes(x = Combination1FoodSecurity, y = Fruit, fill = Combination1FoodSecurity)) +
@@ -153,3 +117,7 @@ ggplot(food_data, aes(x = Combination1FoodSecurity, y = Fruit, fill = Combinatio
 # Repeat for other fruit/vegetable columns like Driedfruit, Fruitjuice, etc.
 
 ```
+
+
+
+
