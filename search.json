@@ -1,16 +1,23 @@
 [
   {
+    "objectID": "page1.html",
+    "href": "page1.html",
+    "title": "Page1?",
+    "section": "",
+    "text": "Plot with Richard\n\n\n\n\n\n\nLooking at Food Security Hackathon event 2\n\n\n\n\n\n\nHere is the breakdown: 0 –&gt; Food secure 1-3 Moderate 4-30 Low/Very Low\nBut the plot above is not right as each user has many inputs, so i need to aggreagate them by user\n\n# Extracting relevant columns\nfood_data &lt;- intake_data[, c(\"Combination1FoodSecurity\", \"Fruit\", \"Driedfruit\", \"Fruitjuice\", \"Smoothiefruit\", \"Tomatoes\")]\n\n# Convert Combination1FoodSecurity to factor if not already\nfood_data$Combination1FoodSecurity &lt;- as.factor(food_data$Combination1FoodSecurity)\n\n\n\n# Plotting the comparison of food security levels with fruit consumption\nggplot(food_data, aes(x = Combination1FoodSecurity, y = Fruit, fill = Combination1FoodSecurity)) +\n  geom_boxplot() +\n  labs(title = \"Food Security vs. Fruit Consumption\",\n       x = \"Food Security Levels\",\n       y = \"Fruit Consumption (units)\") +\n  theme_minimal()\n\nWarning: Removed 391 rows containing non-finite outside the scale range\n(`stat_boxplot()`).\n\n\n\n\n\n\n\n\n# Repeat for other fruit/vegetable columns like Driedfruit, Fruitjuice, etc."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Food Security Dashboard",
+    "title": "Food Security and Insecurity Dashboard",
     "section": "",
-    "text": "This dashboard presents food security data.\n\n# Sample R code to visualize food insecurity data\nlibrary(ggplot2)\ndata &lt;- data.frame(\n  Category = c(\"Food Secure\", \"Moderate Insecurity\", \"Another Category\", \"Very Insecure\"),\n  Value = c(50, 20, 15, 15)\n)\nggplot(data, aes(x = Category, y = Value, fill = Category)) +\n  geom_bar(stat = \"identity\") +\n  theme_minimal()"
+    "text": "Welcome to the Food Security and Insecurity Dashboard.\nThis dashboard explores patterns of food security and insecurity using data from the H3-FPCUK survey.\n\n\nFood security means having reliable access to enough affordable, nutritious food.\nConversely, food insecurity occurs when individuals struggle to afford or access food, leading to poor diet quality, skipped meals, or hunger.\n\n\n\n\nFood Security Overview: Trends in food security across different groups.\n\nFood Consumption & Nutrition: How food security affects fruit & vegetable intake."
   },
   {
     "objectID": "index.html#introduction",
     "href": "index.html#introduction",
-    "title": "Food Security Dashboard",
+    "title": "Food Security and Insecurity Dashboard",
     "section": "",
-    "text": "This dashboard presents food security data.\n\n# Sample R code to visualize food insecurity data\nlibrary(ggplot2)\ndata &lt;- data.frame(\n  Category = c(\"Food Secure\", \"Moderate Insecurity\", \"Another Category\", \"Very Insecure\"),\n  Value = c(50, 20, 15, 15)\n)\nggplot(data, aes(x = Category, y = Value, fill = Category)) +\n  geom_bar(stat = \"identity\") +\n  theme_minimal()"
+    "text": "Welcome to the Food Security and Insecurity Dashboard.\nThis dashboard explores patterns of food security and insecurity using data from the H3-FPCUK survey.\n\n\nFood security means having reliable access to enough affordable, nutritious food.\nConversely, food insecurity occurs when individuals struggle to afford or access food, leading to poor diet quality, skipped meals, or hunger.\n\n\n\n\nFood Security Overview: Trends in food security across different groups.\n\nFood Consumption & Nutrition: How food security affects fruit & vegetable intake."
   }
 ]
