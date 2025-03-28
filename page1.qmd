@@ -118,6 +118,240 @@ ggplot(food_data, aes(x = Combination1FoodSecurity, y = Fruit, fill = Combinatio
 
 ```
 
+# this is Richard's code added from the hackathon 
+
+```{r}
+
+#import csv files
+intake_data <- read.csv("/Users/richardbeaumont/Downloads/H3-Food-PracticeIntake24_Hackathon_100325_v2.csv")
+
+survey_data <- read.csv("/Users/richardbeaumont/Downloads/H3-Food-Practice-Survey-Hackathon_060325_v1.csv")
+
+# Load necessary libraries for data manipulation and visualization
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(plotly)
+
+diet_cols <- c("SpecialDiet_Toloseweight", "SpecialDiet_Togainweight", 
+               "SpecialDiet_Formedicalreasons", "SpecialDiet_Glutenfree", 
+               "SpecialDiet_Wheatfree", "SpecialDiet_Dairyfree", 
+               "SpecialDiet_Vegetarian", "SpecialDiet_Vegan", 
+               "SpecialDiet_Notonaspecialdiet", "SpecialDiet_Other")
+
+
+# Reshape data to long format 
+long_data <- survey_data %>%
+  select(Q6_work_status, all_of(diet_cols)) %>%
+  pivot_longer(cols = all_of(diet_cols), names_to = "SpecialDiet", values_to = "HasDiet") %>%
+  filter(HasDiet == 1) # Keep only selected special diets
+
+# Create stacked bar chart
+ggplot(long_data, aes(x = as.factor(Q6_work_status), fill = SpecialDiet)) +
+  geom_bar(position = "stack") +
+  labs(x = "Work Status", y = "Count", fill = "Special Diet",
+       title = "Special Diet Preferences by Work Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(long_data, aes(x = as.factor(Q6_work_status), fill = SpecialDiet)) +
+  geom_bar(position = "fill") +  # Converts counts to percentages
+  scale_y_continuous(labels = scales::percent_format()) +  # Format y-axis as percentages
+  labs(x = "Work Status", y = "Percentage", fill = "Special Diet",
+       title = "Proportion of Special Diets by Work Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Convert data to long format
+long_data <- survey_data %>%
+  select(Q6_work_status, all_of(diet_cols)) %>%
+  pivot_longer(cols = all_of(diet_cols), names_to = "SpecialDiet", values_to = "HasDiet") %>%
+  filter(HasDiet == 1)
+
+# Calculate percentages
+long_data <- long_data %>%
+  group_by(Q6_work_status, SpecialDiet) %>%
+  summarise(Count = n(), .groups = "drop") %>%
+  group_by(Q6_work_status) %>%
+  mutate(Percentage = Count / sum(Count) * 100)
+
+# Create plotly stacked bar chart
+p <- ggplot(long_data, aes(x = as.factor(Q6_work_status), y = Percentage, fill = SpecialDiet, text = paste0(SpecialDiet, ": ", round(Percentage, 1), "%"))) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = "Work Status", y = "Percentage", fill = "Special Diet",
+       title = "Proportion of Special Diets by Work Status") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Convert ggplot to plotly for interactivity
+plotly_graph <- ggplotly(p, tooltip = "text")
+
+plotly_graph
+
+
+# this is the latest code 
+
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(plotly)
+library(stringr)  # For string manipulation
+
+# Define a lookup table for work status descriptions
+work_status_labels <- c(
+  "2" = "Sick or Disabled",
+  "3" = "Caring for Family",
+  "4" = "Maternity/Paternity",
+  "5" = "Other",
+  "6" = "Prefer not to say",
+  "7" = "Occupational Pension)",
+  "8" = "State Pension)",
+  "9" = "Student",
+  "10" = "Unemployed long",
+  "11" = "Unemployed short",
+  "12" = "Work Full Time",
+  "13" = "Work Part Time",
+  "NA" = "Not Answered"
+)
+
+# Reshape the data from wide to long format
+long_data <- survey_data %>%
+  select(Q6_work_status, starts_with("Specialdiet_")) %>%
+  pivot_longer(cols = starts_with("Specialdiet_"), names_to = "SpecialDiet", values_to = "Present") %>%
+  filter(Present == 1) %>%
+  mutate(SpecialDiet = str_remove(SpecialDiet, "^Specialdiet_")) %>%  # Remove prefix
+  mutate(SpecialDiet = str_remove(SpecialDiet, "1$")) %>%  # Remove trailing '1'
+  group_by(Q6_work_status, SpecialDiet) %>%
+  summarise(Count = n(), .groups = 'drop') %>%
+  mutate(Percentage = (Count / sum(Count) * 100))  # Convert counts to percentages within each work status
+
+# Convert work status numbers to meaningful labels
+long_data$Q6_work_status <- factor(long_data$Q6_work_status, levels = names(work_status_labels), labels = work_status_labels)
+
+# Create the stacked bar chart with updated x-axis labels
+# Create the filled bar chart
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(plotly)
+library(stringr)  # For string manipulation
+
+# Clean SpecialDiet labels
+long_data <- long_data %>%
+  mutate(SpecialDiet = str_remove(SpecialDiet, "^SpecialDiet_")) %>%  # Remove prefix
+  mutate(SpecialDiet = str_replace_all(SpecialDiet, "_", " ")) %>%  # Replace underscores with spaces
+  mutate(SpecialDiet = str_remove(SpecialDiet, "1$"))  # Remove trailing '1' if present
+
+# Recode SpecialDiet labels for better readability
+
+long_data <- long_data %>%
+  mutate(SpecialDiet = recode(SpecialDiet,
+    "For Medicalreasons" = "Medical Reasons",
+    "To Gainweight" = "Gain Weight",
+    "To Loseweight" = "Lose Weight",
+    "Not On A Special Diet" = "No Diet"
+  ))
+
+# Create the filled proportional bar chart with cleaned legend labels
+p <- ggplot(long_data, aes(x = Q6_work_status, y = Percentage, fill = SpecialDiet, 
+                           text = paste0(SpecialDiet, ": ", round(Percentage, 1), "%"))) +
+    geom_bar(stat = "identity", position = "fill") +  # Use 'fill' instead of 'stack'
+    labs(x = "Work Status", y = "Proportion", fill = "Special Diet",
+         title = "Proportion of Special Diets by Work Status") +
+    scale_y_continuous(labels = scales::percent_format()) +  # Convert y-axis to percentage format
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9))  # Adjust text size for readability
+
+# Convert to an interactive plotly graph
+ggplotly(p, tooltip = "text")
+
+
+# Define work status labels
+work_status_labels <- c(
+  "2" = "Sick or Disabled",
+  "3" = "Caring for Family",
+  "4" = "Maternity/Paternity",
+  "5" = "Other",
+  "6" = "Prefer Not to Say",
+  "7" = "Occupational Pension",
+  "8" = "State Pension",
+  "9" = "Student",
+  "10" = "Unemployed Long",
+  "11" = "Unemployed Short",
+  "12" = "Work Full Time",
+  "13" = "Work Part Time"
+)
+
+# Remove NA values from survey_data first
+survey_data <- survey_data %>%
+  filter(!is.na(Q6_work_status))
+
+# Transform data
+long_data <- survey_data %>%
+  select(Q6_work_status, starts_with("Specialdiet_")) %>%
+  pivot_longer(cols = starts_with("Specialdiet_"), names_to = "SpecialDiet", values_to = "Present") %>%
+  filter(Present == 1) %>%  # Remove NA values from SpecialDiet
+  mutate(SpecialDiet = str_remove(SpecialDiet, "^Specialdiet_"),  
+         SpecialDiet = str_remove(SpecialDiet, "1$"),
+         SpecialDiet = str_replace_all(SpecialDiet, "(?<=[a-z])([A-Z])", " \\1")) %>%  
+  group_by(Q6_work_status, SpecialDiet) %>%
+  summarise(Count = n(), .groups = 'drop') %>%
+  group_by(Q6_work_status) %>%
+  mutate(Percentage = (Count / sum(Count)) * 100) %>%
+  mutate(SpecialDiet = str_remove(SpecialDiet, "^Special Diet_")) %>%  # Remove "Special Diet_" prefix
+  mutate(SpecialDiet = str_replace_all(SpecialDiet, "_", " ")) %>%  # Replace underscores with spaces
+  mutate(SpecialDiet = str_to_title(SpecialDiet)) %>%  # Capitalize words properly
+  mutate(SpecialDiet = recode(SpecialDiet,
+    "Notonaspecialdiet" = "No Preference",
+    "Dairyfree" = "Dairy Free",
+    "Formedicalreasons" = "Medical Reasons",
+    "Glutenfree" = "Gluten Free",
+    "Other" = "Other",
+    "Togainweight" = "Gain Weight",
+    "Toloseweight" = "Lose Weight",
+    "Vegetarian" = "Vegetarian",
+    "Wheatfree" = "Wheat Free",
+    "Vegan" = "Vegan"
+  ))
+# Convert work status numbers to labels
+long_data$Q6_work_status <- factor(long_data$Q6_work_status, levels = names(work_status_labels), labels = work_status_labels)
+
+
+
+
+# Create the proportional bar chart
+p <- ggplot(long_data, aes(x = Q6_work_status, y = Percentage, fill = SpecialDiet, 
+                           text = paste0(SpecialDiet, ": ", round(Percentage, 1), "%"))) +
+    geom_bar(stat = "identity", position = "fill") +
+    labs(x = "Work Status", y = "Proportion", fill = "Special Diet",
+         title = "Proportion of Special Diets by Work Status") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9))
+
+# Convert to an interactive plotly graph
+ggplotly(p, tooltip = "text")
+
+
+# put the bar chart into horizontal
+p <- ggplot(long_data, aes(y = Q6_work_status, x = Percentage, fill = SpecialDiet, 
+                           text = paste0(SpecialDiet, ": ", round(Percentage, 1), "%"))) +
+    geom_bar(stat = "identity", position = "fill") +  # Use 'fill' instead of 'stack'
+    labs(y = "Work Status", x = "Proportion", fill = "Special Diet",
+         title = "Proportion of Special Diets by Work Status") +
+    scale_x_continuous(labels = scales::percent_format()) +  # Convert x-axis to percentages
+    theme_minimal() +
+    theme(axis.text.y = element_text(size = 8))  # Adjust text size for readability
+
+# Convert to an interactive plotly graph
+ggplotly(p, tooltip = "text")
+
+
+
+```
+
 
 
 
