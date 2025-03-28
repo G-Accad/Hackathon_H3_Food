@@ -1,6 +1,6 @@
 ---
 title: "Food Security and Insecurity Dashboard"
-author: "Grace and Richard Beaumont and Niamh"
+author: "Grace Accad and Richard Beaumont and Niamh"
 date: "2025-03-13"
 format: 
   html:
